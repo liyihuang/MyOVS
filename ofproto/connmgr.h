@@ -132,6 +132,8 @@ void ofconn_remove_opgroup(struct ofconn *, struct list *,
 /* Sending asynchronous messages. */
 void connmgr_send_port_status(struct connmgr *,
                               const struct ofputil_phy_port *, uint8_t reason);
+/*void connmgr_send_port_stats(struct connmgr *, 
+                              const struct ofputil_port_stats *);*/
 void connmgr_send_flow_removed(struct connmgr *,
                                const struct ofputil_flow_removed *);
 void connmgr_send_packet_in(struct connmgr *,

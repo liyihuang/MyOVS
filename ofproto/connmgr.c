@@ -1320,6 +1320,17 @@ connmgr_send_port_status(struct connmgr *mgr,
     }
 }
 
+/*void connmgr_send_port_stats(struct connmgr *mgr,
+                             const struct ofputil_port_stats *stats)
+{
+    LIST_FOR_EACH (ofconn, node, &mgr->all_conns){
+       struct ofpbuf *msg;
+
+       msg = ofputil_encode_port_stats(&stats,ofconn->protocol);
+       ofconn_send(ofconn, msg, NULL);
+    }
+}
+
 /* Sends an OFPT_FLOW_REMOVED or NXT_FLOW_REMOVED message based on 'fr' to
  * appropriate controllers managed by 'mgr'. */
 void

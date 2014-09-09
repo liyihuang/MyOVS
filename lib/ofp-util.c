@@ -2872,7 +2872,25 @@ ofputil_encode_port_status(const struct ofputil_port_status *ps,
 }
 
 /* ofputil_port_mod */
+/*struct ofpbuf *
+ofputil_encode_port_stats(const struct ofputil_port_stats *, 
+                                         enum ofputil_protocol)
+{
+    ofpbuf *b;
+    enum ofp_version version;
+    enum ofpraw raw;
 
+    version = ofputil_protocol_to_ofp_version(protocol);
+    switch (version){
+        case OFP10_VERSION:
+            raw = OFPRAW_OFP10_PORT_STATS;
+        default:
+            NOT_REACHED();
+
+    b = ofpraw_alloc_xid(raw, version, htonl(0),0);
+
+    }
+}*/
 /* Decodes the OpenFlow "port mod" message in '*oh' into an abstract form in
  * '*pm'.  Returns 0 if successful, otherwise an OFPERR_* value. */
 enum ofperr

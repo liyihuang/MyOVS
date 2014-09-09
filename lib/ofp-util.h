@@ -438,6 +438,8 @@ enum ofperr ofputil_decode_port_status(const struct ofp_header *,
 struct ofpbuf *ofputil_encode_port_status(const struct ofputil_port_status *,
                                           enum ofputil_protocol);
 
+/*struct ofpbuf *ofputil_encode_port_stats(const struct ofputil_port_stats *, 
+                                         enum ofputil_protocol);
 /* Abstract ofp_port_mod. */
 struct ofputil_port_mod {
     uint16_t port_no;

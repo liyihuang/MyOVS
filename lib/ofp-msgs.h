@@ -187,6 +187,9 @@ enum ofpraw {
     OFPRAW_OFPT10_BARRIER_REPLY,
     /* OFPT 1.1+ (21): void. */
     OFPRAW_OFPT11_BARRIER_REPLY,
+    /* OFPT 1.0 (22): struct ofp_traffic_info. */
+    OFPRAW_OFPT10_PORT_STATS,
+
 
 /* Standard statistics. */
 
@@ -420,8 +423,7 @@ enum ofptype {
     OFPTYPE_PORT_DESC_STATS_REQUEST, /* OFPRAW_OFPST_PORT_DESC_REQUEST. */
 
     OFPTYPE_PORT_DESC_STATS_REPLY,   /* OFPRAW_OFPST10_PORT_DESC_REPLY.
-                                      * OFPRAW_OFPST11_PORT_DESC_REPLY. */
-
+                                      * OFPRAW_OFPST11_PORT_DESC_REPLY. */    
     /* Nicira extensions. */
     OFPTYPE_ROLE_REQUEST,         /* OFPRAW_NXT_ROLE_REQUEST. */
     OFPTYPE_ROLE_REPLY,           /* OFPRAW_NXT_ROLE_REPLY. */
@@ -437,7 +439,8 @@ enum ofptype {
     OFPTYPE_FLOW_MONITOR_STATS_REPLY,   /* OFPRAW_NXST_FLOW_MONITOR_REPLY. */
     OFPTYPE_FLOW_MONITOR_CANCEL,        /* OFPRAW_NXT_FLOW_MONITOR_CANCEL. */
     OFPTYPE_FLOW_MONITOR_PAUSED,        /* OFPRAW_NXT_FLOW_MONITOR_PAUSED. */
-    OFPTYPE_FLOW_MONITOR_RESUMED,       /* OFPRAW_NXT_FLOW_MONITOR_RESUMED. */
+    OFPTYPE_FLOW_MONITOR_RESUMED,       /* OFPRAW_NXT_FLOW_MONITOR_RESUMED. */   
+    OFPTYPE_PORT_STATS,    /* OFPRAW_OFPT10_PORT_STATS. */
 };
 
 /* Decoding messages into OFPTYPE_* values. */
