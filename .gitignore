@@ -156,3 +156,5 @@ _debian
 /vswitchd/ovs-vswitchd
 /vswitchd/ovs-vswitchd.8
 /vswitchd/vswitch.ovsschema.stamp
+/.tags
+/.tags_sorted_by_file
