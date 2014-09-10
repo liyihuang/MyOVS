@@ -2879,6 +2879,7 @@ ofputil_encode_port_stats(const struct ofputil_port_stats *,
     ofpbuf *b;
     enum ofp_version version;
     enum ofpraw raw;
+    struct ofp_traffic_info *oti;
 
     version = ofputil_protocol_to_ofp_version(protocol);
     switch (version){
@@ -2888,7 +2889,10 @@ ofputil_encode_port_stats(const struct ofputil_port_stats *,
             NOT_REACHED();
 
     b = ofpraw_alloc_xid(raw, version, htonl(0),0);
+    oti = ofpbuf_put_zeros(b, sizeof *oti);
 
+    ofpmsg_update_length(b);
+    return b;
     }
 }*/
 /* Decodes the OpenFlow "port mod" message in '*oh' into an abstract form in
