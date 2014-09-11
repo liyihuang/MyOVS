@@ -2465,10 +2465,7 @@ ofproto_port_from_dpif_port(struct ofproto_port *ofproto_port,
 static void
 port_run_fast(struct ofport_dpif *ofport)
 {
-    struct ofport *port = &(ofport->up);
-    struct ofputil_port_stats ops = { .port_no = port->pp.port_no };
     
-    ofproto_port_get_stats(port, &ops.stats);
     
     if (ofport->cfm && cfm_should_send_ccm(ofport->cfm)) {
         struct ofpbuf packet;

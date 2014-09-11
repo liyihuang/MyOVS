@@ -1624,6 +1624,13 @@ error:
 static void
 ofport_remove(struct ofport *ofport)
 {
+    struct ofport *port = &(ofport->up);
+    struct ofputil_port_stats ops = { .port_no = port->pp.port_no };
+    
+    ofproto_port_get_stats(port, &ops.stats);
+
+    connmgr_send_port_stats(ofport->ofproto->connmgr,&ops);
+
     connmgr_send_port_status(ofport->ofproto->connmgr, &ofport->pp,
                              OFPPR_DELETE);
     ofport_destroy(ofport);

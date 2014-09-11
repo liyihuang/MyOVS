@@ -437,9 +437,13 @@ enum ofperr ofputil_decode_port_status(const struct ofp_header *,
                                        struct ofputil_port_status *);
 struct ofpbuf *ofputil_encode_port_status(const struct ofputil_port_status *,
                                           enum ofputil_protocol);
+struct ofputil_port_stats {
+    uint16_t port_no;
+    struct netdev_stats stats;
+};
 
-/*struct ofpbuf *ofputil_encode_port_stats(const struct ofputil_port_stats *, 
-                                         enum ofputil_protocol);
+struct ofpbuf *ofputil_encode_port_stats(const struct ofputil_port_stats *, 
+                                         enum ofputil_protocol);    
 /* Abstract ofp_port_mod. */
 struct ofputil_port_mod {
     uint16_t port_no;
@@ -625,10 +629,7 @@ bool ofputil_parse_key_value(char **stringp, char **keyp, char **valuep);
 
 struct ofpbuf *ofputlil_dump_ports(enum ofp_version ofp_version, int16_t port);
 
-struct ofputil_port_stats {
-    uint16_t port_no;
-    struct netdev_stats stats;
-};
+
 
 struct ofpbuf *ofputil_encode_dump_ports_request(enum ofp_version ofp_version,
                                                  int16_t port);
