@@ -69,6 +69,7 @@ _debian
 /datapath/Makefile
 /datapath/distfiles
 /datapath/linux/Kbuild
+/datapath/linux/*
 /datapath/linux/Makefile
 /datapath/linux/Makefile.main
 /include/openflow/openflow-1.0.hstamp
