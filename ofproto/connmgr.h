@@ -35,7 +35,7 @@ struct ofputil_phy_port;
 struct rule;
 struct simap;
 struct sset;
-
+struct ofputil_port_stats;
 /* ofproto supports two kinds of OpenFlow connections:
  *
  *   - "Primary" connections to ordinary OpenFlow controllers.  ofproto
