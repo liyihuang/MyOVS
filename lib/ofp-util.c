@@ -2893,9 +2893,9 @@ ofputil_encode_port_stats(const struct ofputil_port_stats *port_stats,
 
     b = ofpraw_alloc_xid(raw, version, htonl(0),0);
     oti = ofpbuf_put_zeros(b, sizeof *oti);
-    oti->port_no = port_stats->port_no;
-    oti->tx_bytes = port_stats->stats.tx_bytes;
-    oti->rx_bytes = port_stats->stats.rx_bytes;
+    oti->port_no = htonl(port_stats->port_no);
+    oti->tx_bytes = htonl(port_stats->stats.tx_bytes);
+    oti->rx_bytes = htonl(port_stats->stats.rx_bytes);
     ofpmsg_update_length(b);
     return b;
 }
