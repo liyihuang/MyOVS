@@ -1607,6 +1607,14 @@ ofport_install(struct ofproto *p,
     if (error) {
         goto error;
     }
+
+    struct ofputil_port_stats ops = { .port_no = ofport->pp.port_no };
+    
+    ofproto_port_get_stats(ofport, &ops.stats);
+
+
+    connmgr_send_port_stats(ofport->ofproto->connmgr,&ops);
+
     connmgr_send_port_status(p->connmgr, pp, OFPPR_ADD);
     return;
 
@@ -1624,13 +1632,7 @@ error:
 static void
 ofport_remove(struct ofport *ofport)
 {
-    struct ofputil_port_stats ops = { .port_no = ofport->pp.port_no };
     
-    /*ofproto_port_get_stats(ofport, &ops.stats);*/
-
-
-    connmgr_send_port_stats(ofport->ofproto->connmgr,&ops);
-
     connmgr_send_port_status(ofport->ofproto->connmgr, &ofport->pp,
                              OFPPR_DELETE);
     ofport_destroy(ofport);
