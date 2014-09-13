@@ -1328,7 +1328,7 @@ void connmgr_send_port_stats(struct connmgr *mgr,
     LIST_FOR_EACH (ofconn, node, &mgr->all_conns){
        struct ofpbuf *msg;
 
-       msg = ofputil_encode_port_stats(&stats,ofconn->protocol);
+       msg = ofputil_encode_port_stats(stats,ofconn->protocol);
        ofconn_send(ofconn, msg, NULL);
     }
 }
