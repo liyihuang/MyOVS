@@ -26,6 +26,9 @@
 #include <sys/mman.h>
 #endif
 
+#include <stdio.h>
+#include <sys/time.h>
+
 #include "bridge.h"
 #include "command-line.h"
 #include "compiler.h"
@@ -64,6 +67,10 @@ static unixctl_cb_func ovs_vswitchd_exit;
 
 static char *parse_options(int argc, char *argv[], char **unixctl_path);
 static void usage(void) NO_RETURN;
+void timer_handler (int);
+struct sigaction sa;
+struct itimerval timer;
+int a;
 
 int
 main(int argc, char *argv[])
@@ -108,6 +115,22 @@ main(int argc, char *argv[])
     free(remote);
 
     exiting = false;
+
+    
+    /* Install timer_handler as the signal handler for SIGVTALRM. */
+    memset (&sa, 0, sizeof (sa));
+    sa.sa_handler = &timer_handler;
+    sigaction (SIGALRM, &sa, NULL);
+    
+
+    memset(&timer, 0, sizeof(struct itimerval));
+    /* Configure the timer to expire after 250 msec... */
+    timer.it_value.tv_sec = 1;
+    /* ... and every 250 msec after that. */
+    timer.it_interval.tv_sec = 1;
+    /* Start a virtual timer. It counts down whenever this process is
+     executing. */
+    a = setitimer (ITIMER_REAL, &timer, NULL);
     while (!exiting) {
         worker_run();
         if (signal_poll(sighup)) {
@@ -273,4 +296,11 @@ ovs_vswitchd_exit(struct unixctl_conn *conn, int argc OVS_UNUSED,
     bool *exiting = exiting_;
     *exiting = true;
     unixctl_command_reply(conn, NULL);
+}
+
+void timer_handler (int signum)
+{
+    static int count = 0;
+    printf ("timer expired %d times\n", ++count);
+    
 }
