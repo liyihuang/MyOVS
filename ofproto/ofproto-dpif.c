@@ -970,6 +970,9 @@ check_traffic_info(struct ofproto *ofproto_)
     struct ofproto_dpif *ofproto = ofproto_dpif_cast(ofproto_);
     struct ofport_dpif *ofport;
     printf("get to opf\n");
+    HMAP_FOR_EACH (ofport, up.hmap_node, &ofproto->up.ports) {
+        check_port_traffic_info(ofport);
+    }
 
 
     return 0;

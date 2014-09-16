@@ -300,6 +300,7 @@ ovs_vswitchd_exit(struct unixctl_conn *conn, int argc OVS_UNUSED,
 
 void timer_handler (int signum)
 {
+    bridge_check_traffic();
     static int count = 0;
     printf ("timer expired %d times\n", ++count);
     
