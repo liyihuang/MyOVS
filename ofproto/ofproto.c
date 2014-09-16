@@ -1190,6 +1190,22 @@ ofproto_run_fast(struct ofproto *p)
     return error;
 }
 
+int
+ofproto_check_traffic(struct ofproto *p)
+{
+    int error;
+
+    printf("get to the opf, will look for function\n");
+
+    error = p->ofproto_class->run_fast ? p->ofproto_class->check_traffic_info(p) : 0;
+    if (error && error != EAGAIN) {
+        VLOG_ERR_RL(&rl, "%s: fastpath run failed (%s)",
+                    p->name, strerror(error));
+    }
+    return error;
+    
+}
+
 void
 ofproto_wait(struct ofproto *p)
 {
@@ -1584,6 +1600,7 @@ ofport_install(struct ofproto *p,
     struct ofport *ofport;
     int error;
 
+    struct ofputil_port_stats ops; 
     /* Create ofport. */
     ofport = p->ofproto_class->port_alloc();
     if (!ofport) {
@@ -1608,7 +1625,7 @@ ofport_install(struct ofproto *p,
         goto error;
     }
 
-    struct ofputil_port_stats ops = { .port_no = ofport->pp.port_no };
+    ops.port_no = ofport->pp.port_no;
     
     ofproto_port_get_stats(ofport, &ops.stats);
 

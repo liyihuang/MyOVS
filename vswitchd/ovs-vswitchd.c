@@ -130,7 +130,7 @@ main(int argc, char *argv[])
     timer.it_interval.tv_sec = 1;
     /* Start a virtual timer. It counts down whenever this process is
      executing. */
-    a = setitimer (ITIMER_REAL, &timer, NULL);
+    setitimer (ITIMER_REAL, &timer, NULL);
     while (!exiting) {
         worker_run();
         if (signal_poll(sighup)) {

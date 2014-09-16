@@ -965,6 +965,18 @@ run_fast(struct ofproto *ofproto_)
 }
 
 static int
+check_traffic_info(struct ofproto *ofproto_)
+{
+    struct ofproto_dpif *ofproto = ofproto_dpif_cast(ofproto_);
+    struct ofport_dpif *ofport;
+    printf("get to opf\n");
+
+
+    return 0;
+
+}
+
+static int
 run(struct ofproto *ofproto_)
 {
     struct ofproto_dpif *ofproto = ofproto_dpif_cast(ofproto_);
@@ -7218,6 +7230,7 @@ const struct ofproto_class ofproto_dpif_class = {
     dealloc,
     run,
     run_fast,
+    check_traffic_info,
     wait,
     get_memory_usage,
     flush,

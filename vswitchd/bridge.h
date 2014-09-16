@@ -24,7 +24,7 @@ void bridge_exit(void);
 void bridge_run(void);
 void bridge_run_fast(void);
 void bridge_wait(void);
-
+void bridge_check_traffic(void);
 void bridge_get_memory_usage(struct simap *usage);
 
 #endif /* bridge.h */

@@ -2039,6 +2039,18 @@ bridge_run_fast(void)
 }
 
 void
+bridge_check_traffic(void)
+{
+    struct bridge *br;
+    printf("get to bridge\n");
+
+    HMAP_FOR_EACH (br, node, &all_bridges) {
+        ofproto_check_traffic(br->ofproto);
+    }
+
+}
+
+void
 bridge_run(void)
 {
     static const struct ovsrec_open_vswitch null_cfg;
