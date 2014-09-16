@@ -553,6 +553,7 @@ ofport_dpif_cast(const struct ofport *ofport)
 
 static void port_run(struct ofport_dpif *);
 static void port_run_fast(struct ofport_dpif *);
+static void check_port_traffic_info(struct ofport_dpif *);
 static void port_wait(struct ofport_dpif *);
 static int set_cfm(struct ofport *, const struct cfm_settings *);
 static void ofport_clear_priorities(struct ofport_dpif *);
@@ -978,6 +979,8 @@ check_traffic_info(struct ofproto *ofproto_)
     return 0;
 
 }
+
+
 
 static int
 run(struct ofproto *ofproto_)
@@ -2490,6 +2493,12 @@ port_run_fast(struct ofport_dpif *ofport)
         send_packet(ofport, &packet);
         ofpbuf_uninit(&packet);
     }
+}
+
+static void
+check_port_traffic_info(struct ofport_dpif *ofport){
+    printf("get to the port\n");
+
 }
 
 static void
