@@ -112,6 +112,8 @@ struct ofport {
     uint16_t ofp_port;          /* OpenFlow port number. */
     unsigned int change_seq;
     int mtu;
+    struct netdev_stats last_second_traffic_info;
+    struct netdev_stats current_traffic_info;
 };
 
 void ofproto_port_set_state(struct ofport *, enum ofputil_port_state);

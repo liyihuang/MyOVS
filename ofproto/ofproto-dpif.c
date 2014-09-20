@@ -965,16 +965,31 @@ run_fast(struct ofproto *ofproto_)
     return 0;
 }
 
+static int init_last_second_traffic = 1;
+
 static int
 check_traffic_info(struct ofproto *ofproto_)
 {
     struct ofproto_dpif *ofproto = ofproto_dpif_cast(ofproto_);
     struct ofport_dpif *ofport;
-    printf("get to opf\n");
-    HMAP_FOR_EACH (ofport, up.hmap_node, &ofproto->up.ports) {
-        check_port_traffic_info(ofport);
+    
+
+    if (init_last_second_traffic)
+    {
+        HMAP_FOR_EACH (ofport, up.hmap_node, &ofproto->up.ports){
+            memset (&(ofport->up.last_second_traffic_info),0,sizeof(struct netdev_stats));
+        }
+
+        init_last_second_traffic = 0;
+
     }
 
+    printf("get to opf\n");
+    HMAP_FOR_EACH (ofport, up.hmap_node, &ofproto->up.ports) {
+        ofproto_port_get_stats(&(ofport->up), &(ofport->up.current_traffic_info));
+        check_port_traffic_info(ofport);
+        ofproto_port_get_stats(&(ofport->up), &(ofport->up.last_second_traffic_info));
+    }
 
     return 0;
 
@@ -2497,7 +2512,14 @@ port_run_fast(struct ofport_dpif *ofport)
 
 static void
 check_port_traffic_info(struct ofport_dpif *ofport){
+    struct ofport *port = &(ofport->up);
+    uint64_t traffic;
+
     printf("get to the port\n");
+    printf("current %" PRIu64 " \n", port->current_traffic_info.tx_bytes);
+    printf("last second %" PRIu64 "\n", port->last_second_traffic_info.tx_bytes);
+    traffic = port->current_traffic_info.tx_bytes - port->last_second_traffic_info.tx_bytes;
+    printf("traffic is %" PRIu64 "\n", port->last_second_traffic_info.tx_bytes);
 
 }
 
