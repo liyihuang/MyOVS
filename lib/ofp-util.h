@@ -444,7 +444,7 @@ struct ofputil_port_stats {
 };
 
 struct ofpbuf *ofputil_encode_port_stats(const struct ofport *, 
-                                         enum ofputil_protocol, uint8_t a);    
+                                         enum ofputil_protocol, uint8_t congestion);    
 /* Abstract ofp_port_mod. */
 struct ofputil_port_mod {
     uint16_t port_no;

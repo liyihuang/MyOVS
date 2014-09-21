@@ -2874,7 +2874,7 @@ ofputil_encode_port_status(const struct ofputil_port_status *ps,
 /* ofputil_port_mod */
 struct ofpbuf *
 ofputil_encode_port_stats(const struct ofport *port_stats, 
-                          enum ofputil_protocol protocol, uint8_t a)
+                          enum ofputil_protocol protocol, uint8_t tx_congestion)
 {
     struct ofpbuf *b;
     enum ofp_version version;

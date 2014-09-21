@@ -1321,7 +1321,7 @@ connmgr_send_port_status(struct connmgr *mgr,
 }
 
 void connmgr_send_port_stats(struct connmgr *mgr,
-                             const struct ofport *port_stats,uint8_t a)
+                             const struct ofport *port_stats,uint8_t tx_congestion)
 {
     struct ofconn *ofconn;
     
