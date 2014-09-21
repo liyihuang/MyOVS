@@ -2898,6 +2898,7 @@ ofputil_encode_port_stats(const struct ofport *port_stats,
     b = ofpraw_alloc_xid(raw, version, htonl(0),0);
     oti = ofpbuf_put_zeros(b, sizeof *oti);
     oti->port_no = htons(port_stats->ofp_port);
+    memcpy(oti->hw_addr, port_stats->pp.hw_addr, ETH_ADDR_LEN);
     oti->tx_congestion = tx_congestion;
     oti->tx_bytes = htonll(bytes_per_second);
     //oti->rx_bytes = htonl(port_stats->stats.rx_bytes);*/

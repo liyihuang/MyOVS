@@ -559,10 +559,11 @@ OFP_ASSERT(sizeof(struct ofp_vendor_header) == 12);
 
 struct ofp_traffic_info{
   ovs_be16 port_no;
-  uint8_t pad[5];
+  uint8_t hw_addr[OFP_ETH_ALEN];
+  uint8_t pad[7];
   uint8_t tx_congestion;
   ovs_be64 tx_bytes;
   ovs_be64 rx_bytes;
 };
-OFP_ASSERT(sizeof(struct ofp_traffic_info) == 24);
+OFP_ASSERT(sizeof(struct ofp_traffic_info) == 32);
 #endif /* openflow/openflow-1.0.h */
