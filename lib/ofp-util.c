@@ -2873,8 +2873,8 @@ ofputil_encode_port_status(const struct ofputil_port_status *ps,
 
 /* ofputil_port_mod */
 struct ofpbuf *
-ofputil_encode_port_stats(const struct ofputil_port_stats *port_stats, 
-                          enum ofputil_protocol protocol)
+ofputil_encode_port_stats(const struct ofport *port_stats, 
+                          enum ofputil_protocol protocol, uint8_t a)
 {
     struct ofpbuf *b;
     enum ofp_version version;
@@ -2893,10 +2893,10 @@ ofputil_encode_port_stats(const struct ofputil_port_stats *port_stats,
 
     b = ofpraw_alloc_xid(raw, version, htonl(0),0);
     oti = ofpbuf_put_zeros(b, sizeof *oti);
-    oti->port_no = htons(port_stats->port_no);
+/*    oti->port_no = htons(port_stats->port_no);
     oti->tx_bytes = htonl(port_stats->stats.tx_bytes);
     oti->rx_bytes = htonl(port_stats->stats.rx_bytes);
-    ofpmsg_update_length(b);
+    ofpmsg_update_length(b);*/
     return b;
 }
 

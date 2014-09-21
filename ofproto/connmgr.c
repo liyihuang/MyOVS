@@ -1321,15 +1321,15 @@ connmgr_send_port_status(struct connmgr *mgr,
 }
 
 void connmgr_send_port_stats(struct connmgr *mgr,
-                             const struct ofputil_port_stats *stats)
+                             const struct ofport *port_stats,uint8_t a)
 {
     struct ofconn *ofconn;
     
     LIST_FOR_EACH (ofconn, node, &mgr->all_conns){
        struct ofpbuf *msg;
 
-       msg = ofputil_encode_port_stats(stats,ofconn->protocol);
-       ofconn_send(ofconn, msg, NULL);
+   /*    msg = ofputil_encode_port_stats(stats,ofconn->protocol);
+       ofconn_send(ofconn, msg, NULL);*/
     }
 }
 

@@ -30,6 +30,7 @@
 #include "openvswitch/types.h"
 
 struct ofpbuf;
+struct ofport;
 
 /* Port numbers. */
 enum ofperr ofputil_port_from_ofp11(ovs_be32 ofp11_port, uint16_t *ofp10_port);
@@ -442,8 +443,8 @@ struct ofputil_port_stats {
     struct netdev_stats stats;
 };
 
-struct ofpbuf *ofputil_encode_port_stats(const struct ofputil_port_stats *, 
-                                         enum ofputil_protocol);    
+struct ofpbuf *ofputil_encode_port_stats(const struct ofport *, 
+                                         enum ofputil_protocol, uint8_t a);    
 /* Abstract ofp_port_mod. */
 struct ofputil_port_mod {
     uint16_t port_no;

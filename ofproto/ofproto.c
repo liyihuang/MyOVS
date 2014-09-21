@@ -1600,7 +1600,7 @@ ofport_install(struct ofproto *p,
     struct ofport *ofport;
     int error;
 
-    struct ofputil_port_stats ops; 
+//    struct ofputil_port_stats ops; 
     /* Create ofport. */
     ofport = p->ofproto_class->port_alloc();
     if (!ofport) {
@@ -1625,12 +1625,12 @@ ofport_install(struct ofproto *p,
         goto error;
     }
 
-    ops.port_no = ofport->pp.port_no;
+/*    ops.port_no = ofport->pp.port_no;
     
     ofproto_port_get_stats(ofport, &ops.stats);
 
 
-    connmgr_send_port_stats(ofport->ofproto->connmgr,&ops);
+    connmgr_send_port_stats(ofport->ofproto->connmgr,&ops);*/
 
     connmgr_send_port_status(p->connmgr, pp, OFPPR_ADD);
     return;
