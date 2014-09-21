@@ -977,7 +977,8 @@ check_traffic_info(struct ofproto *ofproto_)
     if (init_last_second_traffic)
     {
         HMAP_FOR_EACH (ofport, up.hmap_node, &ofproto->up.ports){
-            memset (&(ofport->up.last_second_traffic_info),0,sizeof(struct netdev_stats));
+            memset (&(ofport->up.tx_last_second_traffic_info),0,sizeof(struct netdev_stats));
+            ofport->up.tx_congestion = 0;
         }
 
         init_last_second_traffic = 0;
@@ -986,9 +987,9 @@ check_traffic_info(struct ofproto *ofproto_)
 
     printf("get to opf\n");
     HMAP_FOR_EACH (ofport, up.hmap_node, &ofproto->up.ports) {
-        ofproto_port_get_stats(&(ofport->up), &(ofport->up.current_traffic_info));
+        ofproto_port_get_stats(&(ofport->up), &(ofport->up.tx_current_traffic_info));
         check_port_traffic_info(ofport);
-        ofproto_port_get_stats(&(ofport->up), &(ofport->up.last_second_traffic_info));
+        ofproto_port_get_stats(&(ofport->up), &(ofport->up.tx_last_second_traffic_info));
     }
 
     return 0;
@@ -2513,13 +2514,25 @@ port_run_fast(struct ofport_dpif *ofport)
 static void
 check_port_traffic_info(struct ofport_dpif *ofport){
     struct ofport *port = &(ofport->up);
-    uint64_t traffic;
+    uint64_t tx_traffic_per_second;
 
-    printf("get to the port\n");
-    printf("current %" PRIu64 " \n", port->current_traffic_info.tx_bytes);
-    printf("last second %" PRIu64 "\n", port->last_second_traffic_info.tx_bytes);
-    traffic = port->current_traffic_info.tx_bytes - port->last_second_traffic_info.tx_bytes;
-    printf("traffic is %" PRIu64 "\n", port->last_second_traffic_info.tx_bytes);
+    printf("get to the port,port number is \%" PRIu16 "\n",port->ofp_port);
+    tx_traffic_per_second = port->tx_current_traffic_info.tx_bytes - port->tx_last_second_traffic_info.tx_bytes;
+    printf("traffic is %" PRIu64 "\n", tx_traffic_per_second);
+    printf("tx_congestion is %d \n",port->tx_congestion);
+
+    if (tx_traffic_per_second >1000 && port->tx_congestion ==0 )
+    {
+        port->tx_congestion = 1;
+        connmgr_send_port_stats(port->ofproto->connmgr,port,port->tx_congestion);
+        printf("sent the congestion\n");
+
+    }
+    else if (tx_traffic_per_second <800 && port->tx_congestion ==1)
+    {
+        port->tx_congestion = 0;
+        connmgr_send_port_stats(port->ofproto->connmgr,port,port->tx_congestion);
+    }
 
 }
 

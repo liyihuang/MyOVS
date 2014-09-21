@@ -42,6 +42,7 @@
 #include "unaligned.h"
 #include "type-props.h"
 #include "vlog.h"
+#include "ofproto/ofproto-provider.h"
 
 VLOG_DEFINE_THIS_MODULE(ofp_util);
 
@@ -2880,7 +2881,10 @@ ofputil_encode_port_stats(const struct ofport *port_stats,
     enum ofp_version version;
     enum ofpraw raw;
     struct ofp_traffic_info *oti;
+    uint64_t bytes_per_second;
 
+    bytes_per_second = port_stats->tx_current_traffic_info.tx_bytes - port_stats->tx_last_second_traffic_info.tx_bytes;
+    printf("traffic is %" PRIu64 "\n",bytes_per_second );
     version = ofputil_protocol_to_ofp_version(protocol);
     switch (version){
     case OFP10_VERSION:
@@ -2893,10 +2897,11 @@ ofputil_encode_port_stats(const struct ofport *port_stats,
 
     b = ofpraw_alloc_xid(raw, version, htonl(0),0);
     oti = ofpbuf_put_zeros(b, sizeof *oti);
-/*    oti->port_no = htons(port_stats->port_no);
-    oti->tx_bytes = htonl(port_stats->stats.tx_bytes);
-    oti->rx_bytes = htonl(port_stats->stats.rx_bytes);
-    ofpmsg_update_length(b);*/
+    oti->port_no = htons(port_stats->ofp_port);
+    oti->tx_congestion = tx_congestion;
+    oti->tx_bytes = htonll(bytes_per_second);
+    //oti->rx_bytes = htonl(port_stats->stats.rx_bytes);*/
+    ofpmsg_update_length(b);
     return b;
 }
 
