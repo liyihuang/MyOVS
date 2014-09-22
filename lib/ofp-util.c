@@ -2883,7 +2883,7 @@ ofputil_encode_port_stats(const struct ofport *port_stats,
     struct ofp_traffic_info *oti;
     uint64_t bytes_per_second;
 
-    bytes_per_second = port_stats->tx_current_traffic_info.tx_bytes - port_stats->tx_last_second_traffic_info.tx_bytes;
+    bytes_per_second = port_stats->current_traffic_info.tx_bytes - port_stats->last_second_traffic_info.tx_bytes;
     printf("traffic is %" PRIu64 "\n",bytes_per_second );
     version = ofputil_protocol_to_ofp_version(protocol);
     switch (version){
