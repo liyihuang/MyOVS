@@ -1190,6 +1190,22 @@ ofproto_run_fast(struct ofproto *p)
     return error;
 }
 
+int 
+ofproto_traffic_init(struct ofproto *p)
+{
+    int error;
+
+    printf("get to the opf, will look for function\n");
+
+    error = p->ofproto_class->run_fast ? p->ofproto_class->get_to_ofproto_traffic_init(p) : 0;
+    if (error && error != EAGAIN) {
+        VLOG_ERR_RL(&rl, "%s: traffic init run failed (%s)",
+                    p->name, strerror(error));
+    }
+    return error;
+
+}
+
 int
 ofproto_check_traffic(struct ofproto *p)
 {
@@ -1199,7 +1215,7 @@ ofproto_check_traffic(struct ofproto *p)
 
     error = p->ofproto_class->run_fast ? p->ofproto_class->check_traffic_info(p) : 0;
     if (error && error != EAGAIN) {
-        VLOG_ERR_RL(&rl, "%s: fastpath run failed (%s)",
+        VLOG_ERR_RL(&rl, "%s: check traffic run failed (%s)",
                     p->name, strerror(error));
     }
     return error;

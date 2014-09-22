@@ -965,34 +965,33 @@ run_fast(struct ofproto *ofproto_)
     return 0;
 }
 
-int init_last_second_traffic = 1;
+
+static int
+get_to_ofproto_traffic_init(struct ofproto *ofproto_)
+{
+    printf("get to init \n");
+    struct ofproto_dpif *ofproto = ofproto_dpif_cast(ofproto_);
+    struct ofport_dpif *ofport;
+    
+    HMAP_FOR_EACH (ofport, up.hmap_node, &ofproto->up.ports)
+    {
+        memset (&(ofport->up.last_second_traffic_info),0,sizeof(struct netdev_stats));
+        ofport->up.tx_congestion = 0;
+        printf("initally tx_congestion is %d\n",ofport->up.tx_congestion);
+    }
+    return 0;
+
+}
 
 static int
 check_traffic_info(struct ofproto *ofproto_)
 {
     struct ofproto_dpif *ofproto = ofproto_dpif_cast(ofproto_);
     struct ofport_dpif *ofport;
-    int test = 0;
-    
 
-    if (init_last_second_traffic)
-    {
-        HMAP_FOR_EACH (ofport, up.hmap_node, &ofproto->up.ports){
-            memset (&(ofport->up.last_second_traffic_info),0,sizeof(struct netdev_stats));
-            ofport->up.tx_congestion = 0;
-            test++;
-            printf("test is %d\n",test);
-            printf("tx_congestion is %d\n",ofport->up.tx_congestion);
-            printf("last second tx_byte is  %" PRIu64 " \n",ofport->up.last_second_traffic_info.tx_bytes);
-        }
-
-        init_last_second_traffic = 0;
-
-    }
-
-    printf("get to opf\n");
     HMAP_FOR_EACH (ofport, up.hmap_node, &ofproto->up.ports) {
         ofproto_port_get_stats(&(ofport->up), &(ofport->up.current_traffic_info));
+
         check_port_traffic_info(ofport);
         ofproto_port_get_stats(&(ofport->up), &(ofport->up.last_second_traffic_info));
     }
@@ -2523,14 +2522,11 @@ check_port_traffic_info(struct ofport_dpif *ofport){
 
     printf("get to the port,port number is %" PRIu16 "\n",port->ofp_port);
 
-    printf("current traffic is  %" PRIu64 "\n", port->current_traffic_info.tx_bytes);
-    printf("last second traffic is %" PRIu64 " \n",port->last_second_traffic_info.tx_bytes);
 /*    if (port->last_second_traffic_info.tx_bytes > port->current_traffic_info.tx_bytes)
     {
         port->current_traffic_info.tx_bytes = 0;
     }*/
     tx_traffic_per_second = port->current_traffic_info.tx_bytes - port->last_second_traffic_info.tx_bytes;
-    printf("traffic is %" PRIu64 "\n", tx_traffic_per_second);
     printf("tx_congestion is %" PRIu8 "\n",port->tx_congestion);
 
     if (tx_traffic_per_second >1000 && port->tx_congestion ==0 )
@@ -7289,6 +7285,7 @@ const struct ofproto_class ofproto_dpif_class = {
     dealloc,
     run,
     run_fast,
+    get_to_ofproto_traffic_init,
     check_traffic_info,
     wait,
     get_memory_usage,

@@ -20,6 +20,7 @@ struct simap;
 
 void bridge_init(const char *remote);
 void bridge_exit(void);
+void bridge_check_traffic_init(void);
 
 void bridge_run(void);
 void bridge_run_fast(void);

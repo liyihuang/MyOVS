@@ -2039,6 +2039,16 @@ bridge_run_fast(void)
 }
 
 void
+bridge_check_traffic_init(void)
+{
+   struct bridge *br;
+    
+    HMAP_FOR_EACH (br, node, &all_bridges) {
+        ofproto_traffic_init(br->ofproto);
+    } 
+}
+
+void
 bridge_check_traffic(void)
 {
     struct bridge *br;

@@ -151,6 +151,7 @@ int ofproto_delete(const char *name, const char *type);
 
 int ofproto_run(struct ofproto *);
 int ofproto_run_fast(struct ofproto *);
+int ofproto_traffic_init(struct ofproto *);
 int ofproto_check_traffic(struct ofproto *);
 void ofproto_wait(struct ofproto *);
 bool ofproto_is_alive(const struct ofproto *);

@@ -70,7 +70,7 @@ static void usage(void) NO_RETURN;
 void timer_handler (int);
 struct sigaction sa;
 struct itimerval timer;
-int a;
+int init_check_traffic;
 
 int
 main(int argc, char *argv[])
@@ -115,22 +115,18 @@ main(int argc, char *argv[])
     free(remote);
 
     exiting = false;
+    init_check_traffic = false;
 
-    
-    /* Install timer_handler as the signal handler for SIGVTALRM. */
+
     memset (&sa, 0, sizeof (sa));
     sa.sa_handler = &timer_handler;
     sigaction (SIGALRM, &sa, NULL);
-    
-
     memset(&timer, 0, sizeof(struct itimerval));
-    /* Configure the timer to expire after 250 msec... */
     timer.it_value.tv_sec = 1;
-    /* ... and every 250 msec after that. */
     timer.it_interval.tv_sec = 1;
-    /* Start a virtual timer. It counts down whenever this process is
-     executing. */
     setitimer (ITIMER_REAL, &timer, NULL);
+
+
     while (!exiting) {
         worker_run();
         if (signal_poll(sighup)) {
@@ -298,8 +294,14 @@ ovs_vswitchd_exit(struct unixctl_conn *conn, int argc OVS_UNUSED,
     unixctl_command_reply(conn, NULL);
 }
 
+
 void timer_handler (int signum)
 {
+    if(!init_check_traffic)
+    {
+        bridge_check_traffic_init();
+        init_check_traffic = true;
+    }
     bridge_check_traffic();
     static int count = 0;
     printf ("timer expired %d times\n", ++count);

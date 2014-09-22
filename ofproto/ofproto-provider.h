@@ -424,6 +424,8 @@ struct ofproto_class {
      * boost for that ofproto implementation. */
     int (*run_fast)(struct ofproto *ofproto);
 
+    int (*get_to_ofproto_traffic_init)(struct ofproto *ofproto);
+
     int (*check_traffic_info)(struct ofproto *ofproto);
 
     /* Causes the poll loop to wake up when 'ofproto''s 'run' function needs to
