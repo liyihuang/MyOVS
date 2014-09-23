@@ -976,6 +976,7 @@ get_to_ofproto_traffic_init(struct ofproto *ofproto_)
     HMAP_FOR_EACH (ofport, up.hmap_node, &ofproto->up.ports)
     {
         memset (&(ofport->up.last_second_traffic_info),0,sizeof(struct netdev_stats));
+        memset (&(ofport->up.current_traffic_info),0,sizeof(struct netdev_stats));
         ofport->up.tx_congestion = 0;
         printf("initally tx_congestion is %d\n",ofport->up.tx_congestion);
     }
