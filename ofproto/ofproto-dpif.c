@@ -2530,7 +2530,7 @@ check_port_traffic_info(struct ofport_dpif *ofport){
     tx_traffic_per_second = port->current_traffic_info.tx_bytes - port->last_second_traffic_info.tx_bytes;
     printf("tx_congestion is %" PRIu8 "\n",port->tx_congestion);
 
-    if (tx_traffic_per_second >1000 && port->tx_congestion ==0 )
+    if (tx_traffic_per_second >400 && port->tx_congestion ==0 )
     {
         port->tx_congestion = 1;
         connmgr_send_port_stats(port->ofproto->connmgr,port,port->tx_congestion);
