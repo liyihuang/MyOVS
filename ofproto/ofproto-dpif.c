@@ -972,7 +972,7 @@ get_to_ofproto_traffic_init(struct ofproto *ofproto_)
     printf("get to init \n");
     struct ofproto_dpif *ofproto = ofproto_dpif_cast(ofproto_);
     struct ofport_dpif *ofport;
-    
+
     HMAP_FOR_EACH (ofport, up.hmap_node, &ofproto->up.ports)
     {
         memset (&(ofport->up.last_second_traffic_info),0,sizeof(struct netdev_stats));
@@ -2504,8 +2504,8 @@ ofproto_port_from_dpif_port(struct ofproto_port *ofproto_port,
 static void
 port_run_fast(struct ofport_dpif *ofport)
 {
-    
-    
+
+
     if (ofport->cfm && cfm_should_send_ccm(ofport->cfm)) {
         struct ofpbuf packet;
 
@@ -2521,26 +2521,74 @@ check_port_traffic_info(struct ofport_dpif *ofport){
     struct ofport *port = &(ofport->up);
     uint64_t tx_traffic_per_second;
 
-    printf("get to the port,port number is %" PRIu16 "\n",port->ofp_port);
+    uint64_t up_yellow = 1000;
+    uint64_t down_yellow = 800;
 
+    uint64_t up_red = 2000;
+    uint64_t down_red = 1800;
+
+    if (port->tx_congestion > 2)
+    {
+        port->tx_congestion = 0;
+    }
+    if (port->ofp_port < 65280)
+    {
+
+    
+        printf("get to the port,port number is %" PRIu16 "\n",port->ofp_port);
 /*    if (port->last_second_traffic_info.tx_bytes > port->current_traffic_info.tx_bytes)
     {
         port->current_traffic_info.tx_bytes = 0;
     }*/
-    tx_traffic_per_second = port->current_traffic_info.tx_bytes - port->last_second_traffic_info.tx_bytes;
-    printf("tx_congestion is %" PRIu8 "\n",port->tx_congestion);
 
-    if (tx_traffic_per_second >400 && port->tx_congestion ==0 )
-    {
-        port->tx_congestion = 1;
-        connmgr_send_port_stats(port->ofproto->connmgr,port,port->tx_congestion);
-        printf("sent the congestion\n");
+        tx_traffic_per_second = port->current_traffic_info.tx_bytes - port->last_second_traffic_info.tx_bytes;
 
-    }
-    else if (tx_traffic_per_second <800 && port->tx_congestion ==1)
-    {
-        port->tx_congestion = 0;
-        connmgr_send_port_stats(port->ofproto->connmgr,port,port->tx_congestion);
+        if (port->tx_congestion == 0)
+        {
+            if (tx_traffic_per_second >up_red)
+            {
+                port->tx_congestion = 2;
+                connmgr_send_port_stats(port->ofproto->connmgr,port,port->tx_congestion);
+            }
+            else if (tx_traffic_per_second > up_yellow
+                )
+            {
+                port->tx_congestion = 1;
+                connmgr_send_port_stats(port->ofproto->connmgr,port,port->tx_congestion);
+            }
+
+
+        }
+        else if(port->tx_congestion == 2)
+        {
+            if (tx_traffic_per_second < down_yellow)
+            {
+                port->tx_congestion = 0;
+                connmgr_send_port_stats(port->ofproto->connmgr,port,port->tx_congestion);
+            }
+            else if (tx_traffic_per_second < down_red)
+            {
+                port->tx_congestion = 1;
+                connmgr_send_port_stats(port->ofproto->connmgr,port,port->tx_congestion);
+
+            }
+        }
+        else if (port-> tx_congestion == 1)
+        {
+            if (tx_traffic_per_second >up_red)
+            {
+                port->tx_congestion = 2;
+                connmgr_send_port_stats(port->ofproto->connmgr,port,port->tx_congestion);
+            }
+            else if (tx_traffic_per_second < down_yellow)
+            {
+                port->tx_congestion = 0;
+                connmgr_send_port_stats(port->ofproto->connmgr,port,port->tx_congestion);
+            }
+        }
+
+        printf("tx_congestion is %" PRIu8 "\n",port->tx_congestion);
+
     }
 
 }
